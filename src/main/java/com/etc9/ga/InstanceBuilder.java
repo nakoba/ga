@@ -16,7 +16,6 @@ import static com.etc9.ga.Reflections.*;
  */
 public class InstanceBuilder {
 
-
     /** Context of injection. */
     private InjectionContext context;
 

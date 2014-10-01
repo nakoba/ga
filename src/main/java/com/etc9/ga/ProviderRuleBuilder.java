@@ -2,6 +2,7 @@ package com.etc9.ga;
 
 import javax.inject.Provider;
 import java.lang.annotation.Annotation;
+import java.util.function.Supplier;
 
 /**
  * Builder of InjectionRule for provider.
@@ -36,21 +37,15 @@ public class ProviderRuleBuilder<T> {
      * @param providerClass provider class
      */
     public void map(Class<? extends Provider<T>> providerClass) {
-
         this.providerClass = providerClass;
-
-        InjectionPoint<Provider<T>> point = new InjectionPoint<>(typeLiteral, annotations);
-        InjectionRule<Provider<T>> rule = new InjectionRule<>(point, providerProxy());
-
-        context.add(rule);
-
+        context.add(new InjectionPoint<>(typeLiteral, annotations), supplierProxy());
     }
 
     /**
-     * Create provider of provider.
-     * @return provider of provider
+     * Create supplier of provider.
+     * @return supplier of provider
      */
-    private Provider<Provider<T>> providerProxy() {
+    private Supplier<Provider<T>> supplierProxy() {
         return () -> () -> {
             final Provider<T> provider = () -> {
                 Object o = new InstanceBuilder(context).newInstance(providerClass);

@@ -2,6 +2,7 @@ package com.etc9.ga;
 
 import javax.inject.Provider;
 import java.lang.annotation.Annotation;
+import java.util.function.Supplier;
 
 /**
  * Builder of InjectionRule.
@@ -37,20 +38,15 @@ public class InjectionRuleBuilder<T> {
      * @param mappedClass mapped class
      */
     public void map(Class<? extends T> mappedClass) {
-
         this.mappedClass = mappedClass;
-
-        InjectionPoint<T> point = new InjectionPoint<>(typeLiteral, annotations);
-        InjectionRule<T> rule = new InjectionRule<>(point, provider());
-
-        context.add(rule);
+        context.add(new InjectionPoint<>(typeLiteral, annotations), supplier());
     }
 
     /**
      * Create provider.
      * @return provider
      */
-    private Provider<? extends T> provider() {
+    private Supplier<? extends T> supplier() {
         return () -> mappedClass.cast(
                 new InstanceBuilder(context).newInstance(mappedClass));
     }

@@ -3,11 +3,10 @@ package com.etc9.ga;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
-import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Injection context.
@@ -16,8 +15,8 @@ import java.util.function.Function;
  */
 public class InjectionContext {
 
-    /** Mapping rules. */
-    private final ConcurrentMap<InjectionPoint<?>, InjectionRule<?>> rules = new ConcurrentHashMap<>();
+    /** Mapping mapping. */
+    private final InjectionMapping mapping = new InjectionMapping();
 
     /** Cache of instance. */
     private final ConcurrentMap<Class<?>, Object> instanceCache = new ConcurrentHashMap<>();
@@ -47,27 +46,29 @@ public class InjectionContext {
     }
 
     /**
-     * Gets mapped provider from rules.
+     * Gets mapped provider from mapping.
      * @param point injection point
      * @param <T> type
      * @return mapped provider
      */
     @SuppressWarnings("unchecked")
-    public <T> Provider<? extends T> mapOf(InjectionPoint<T> point) {
+    public <T> Supplier<? extends T> mapOf(InjectionPoint<T> point) {
 
-        if (!rules.containsKey(point)) {
-            throw new RuntimeException("Undefined rule. [" + point + "]");
+        if (!mapping.hasMappingOf(point)) {
+            throw new RuntimeException("Undefined mapping. [" + point + "]");
         }
 
-        return (Provider<? extends T>) rules.get(point).getProvider();
+        return (Supplier<? extends T>) mapping.get(point);
     }
 
     /**
-     * Add injection rule.
-     * @param rule rule
+     * add mapping rule.
+     * @param point injection point
+     * @param supplier concrete supplier
+     * @param <T> type of injection
      */
-    void add(InjectionRule<?> rule) {
-        rules.put(rule.getPoint(), rule);
+    <T> void add(InjectionPoint<T> point, Supplier<? extends T> supplier) {
+        mapping.put(point, supplier);
     }
 
 

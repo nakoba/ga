@@ -1,6 +1,7 @@
 package com.etc9.ga;
 
 import javax.inject.Provider;
+import java.util.function.Supplier;
 
 /**
  * Implementation of {@code injector}.
@@ -24,8 +25,8 @@ public class InjectorImpl implements Injector {
 
     @Override
     public <T> T getInstance(Class<T> clazz) {
-        Provider<?> provider = context.mapOf(InjectionPoint.of(clazz));
-        return clazz.cast(provider.get());
+        Supplier<?> supplier = context.mapOf(InjectionPoint.of(clazz));
+        return clazz.cast(supplier.get());
     }
 
 }

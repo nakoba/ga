@@ -6,6 +6,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 import static com.etc9.core.matcher.Matchers.isClassOf;
+import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -21,9 +22,9 @@ public class TypeLiteralTest {
      */
     @Test public void testTypeLiteral() throws Exception {
 
-        TypeLiteral stringListType = new TypeLiteral<List<String>>(){};
+        TypeLiteral<List<String>> stringListType = new TypeLiteral<List<String>>(){};
 
-        assertThat(stringListType.getType(), is(ParameterizedType.class));
+        assertThat(stringListType.getType(), instanceOf(ParameterizedType.class));
         assertThat(stringListType.getRawType(), isClassOf(List.class));
 
         ParameterizedType pt = (ParameterizedType) stringListType.getType();
@@ -32,7 +33,6 @@ public class TypeLiteralTest {
 
         assertThat(stringListType.getRawType(), isClassOf(List.class));
     }
-
 
 
 }

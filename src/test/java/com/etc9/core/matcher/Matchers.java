@@ -2,6 +2,8 @@ package com.etc9.core.matcher;
 
 import org.hamcrest.Matcher;
 
+import java.lang.reflect.Type;
+
 import static org.hamcrest.CoreMatchers.is;
 
 /**
